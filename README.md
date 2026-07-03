@@ -1,4 +1,4 @@
-(6/24) Background
+(7/2) Background
 
 1. Utilizes fastapi where the following need to be installed:
    fastapi uvicorn sqlalchemy pymysql python-dotenv
@@ -12,3 +12,5 @@
    http://127.0.0.1:8000/items — raw JSON 
 
 5. Tests are basic GET, POST, PUT and DELETE requests that validate error codes/response times/response content
+
+6. There are 2 folders - one for a single CRUD test and one with mulitple CRUD tests

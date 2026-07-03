@@ -8,376 +8,913 @@
   },
   "item": [
     {
-      "name": "Read Items",
-      "event": [
+      "name": "SingleCRUD",
+      "item": [
         {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test('Status code is successful', function () {",
-              "    pm.expect(pm.response.code).to.equal(200);",
-              "});",
-              "",
-              "pm.test('Response time is sane', function () {",
-              "    pm.expect(pm.response.responseTime).to.be.below(2000);",
-              "});",
-              "",
-              "pm.test('Content-Type is JSON when present', function () {",
-              "    const contentType = pm.response.headers.get('Content-Type');",
-              "    if (contentType) {",
-              "        pm.expect(contentType.toLowerCase()).to.include('application/json');",
-              "    }",
-              "});",
-              "",
-              "pm.test('Response body has expected item fields', function () {",
-              "    const json = pm.response.json();",
-              "    pm.expect(json).to.be.an('array').and.not.be.empty;",
-              "",
-              "    const item = json[0];",
-              "    pm.expect(item).to.have.property('name');",
-              "    pm.expect(item.name).to.be.a('string').and.not.be.empty;",
-              "",
-              "    pm.expect(item).to.have.property('description');",
-              "    pm.expect(item.description).to.be.a('string');",
-              "",
-              "    pm.expect(item).to.have.property('price');",
-              "    pm.expect(item.price).to.be.a('number').and.be.at.least(0);",
-              "    ",
-              "    pm.expect(item).to.have.property('id');",
-              "    pm.expect(item.id).to.be.a('number');",
-              "    pm.expect(item.id).to.be.above(0);",
-              "});"
-            ],
-            "type": "text/javascript",
-            "packages": {},
-            "requests": {}
-          }
-        }
-      ],
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://127.0.0.1:8000/items",
-          "protocol": "http",
-          "host": [
-            "127",
-            "0",
-            "0",
-            "1"
-          ],
-          "port": "8000",
-          "path": [
-            "items"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Create Item",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "const jsonData = pm.response.json();",
-              "pm.collectionVariables.set(\"new_record_name\", jsonData.name);",
-              "pm.collectionVariables.set(\"new_record_description\", jsonData.description);",
-              "pm.collectionVariables.set(\"new_record_price\", jsonData.price);",
-              "pm.collectionVariables.set(\"new_record_id\", jsonData.id);",
-              "",
-              "pm.test('Status code is successful creation', function () {",
-              "    pm.expect(pm.response.code).to.equal(201);",
-              "});",
-              "",
-              "pm.test('Response time is sane', function () {",
-              "    pm.expect(pm.response.responseTime).to.be.below(2000);",
-              "});",
-              "",
-              "pm.test('Content-Type is JSON when present', function () {",
-              "    const contentType = pm.response.headers.get('Content-Type');",
-              "    if (contentType) {",
-              "        pm.expect(contentType.toLowerCase()).to.include('application/json');",
-              "    }",
-              "});",
-              "",
-              "pm.test('Response body has expected item fields', function () {",
-              "    pm.expect(jsonData).to.have.property('name');",
-              "    pm.expect(jsonData.name).to.be.a('string').and.not.be.empty;",
-              "",
-              "    pm.expect(jsonData).to.have.property('description');",
-              "    pm.expect(jsonData.description).to.be.a('string');",
-              "",
-              "    pm.expect(jsonData).to.have.property('price');",
-              "    pm.expect(Number(jsonData.price)).to.be.a('number').and.be.at.least(0);",
-              "    ",
-              "    pm.expect(jsonData).to.have.property('id');",
-              "    pm.expect(jsonData.id).to.be.a('number');",
-              "    pm.expect(jsonData.id).to.be.above(0);",
-              "});",
-              "",
-              "console.log(\"Created record with ID: \" + pm.collectionVariables.get(\"new_record_id\"));"
-            ],
-            "type": "text/javascript",
-            "packages": {},
-            "requests": {}
-          }
-        },
-        {
-          "listen": "prerequest",
-          "script": {
-            "exec": [
-              ""
-            ],
-            "type": "text/javascript",
-            "packages": {},
-            "requests": {}
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n  \"name\": \"{{name}}\",\r\n  \"description\": \"{{description}}\",\r\n  \"price\": {{price}}\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
+          "name": "Read Items",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is successful', function () {",
+                  "    pm.expect(pm.response.code).to.equal(200);",
+                  "});",
+                  "",
+                  "pm.test('Response time is sane', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "});",
+                  "",
+                  "pm.test('Content-Type is JSON when present', function () {",
+                  "    const contentType = pm.response.headers.get('Content-Type');",
+                  "    if (contentType) {",
+                  "        pm.expect(contentType.toLowerCase()).to.include('application/json');",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test('Response body has expected item fields', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.be.an('array').and.not.be.empty;",
+                  "",
+                  "    const item = json[0];",
+                  "    pm.expect(item).to.have.property('name');",
+                  "    pm.expect(item.name).to.be.a('string').and.not.be.empty;",
+                  "",
+                  "    pm.expect(item).to.have.property('description');",
+                  "    pm.expect(item.description).to.be.a('string');",
+                  "",
+                  "    pm.expect(item).to.have.property('price');",
+                  "    pm.expect(item.price).to.be.a('number').and.be.at.least(0);",
+                  "    ",
+                  "    pm.expect(item).to.have.property('id');",
+                  "    pm.expect(item.id).to.be.a('number');",
+                  "    pm.expect(item.id).to.be.above(0);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
             }
-          }
-        },
-        "url": {
-          "raw": "http://127.0.0.1:8000/items",
-          "protocol": "http",
-          "host": [
-            "127",
-            "0",
-            "0",
-            "1"
           ],
-          "port": "8000",
-          "path": [
-            "items"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Read Item",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test('Status code is successful', function () {",
-              "    pm.expect(pm.response.code).to.equal(200);",
-              "});",
-              "",
-              "pm.test('Response time is sane', function () {",
-              "    pm.expect(pm.response.responseTime).to.be.below(2000);",
-              "});",
-              "",
-              "pm.test('Content-Type is JSON when present', function () {",
-              "    const contentType = pm.response.headers.get('Content-Type');",
-              "    if (contentType) {",
-              "        pm.expect(contentType.toLowerCase()).to.include('application/json');",
-              "    }",
-              "});",
-              "",
-              "pm.test('Response body has expected item fields', function () {",
-              "    const json = pm.response.json();",
-              "",
-              "    pm.expect(json).to.have.property('name');",
-              "    pm.expect(json.name).to.be.a('string').and.not.be.empty;",
-              "",
-              "    pm.expect(json).to.have.property('description');",
-              "    pm.expect(json.description).to.be.a('string');",
-              "",
-              "    pm.expect(json).to.have.property('price');",
-              "    pm.expect(Number(json.price)).to.be.a('number').and.be.at.least(0);",
-              "    ",
-              "    pm.expect(json).to.have.property('id');",
-              "    pm.expect(json.id).to.be.a('number');",
-              "    pm.expect(json.id).to.be.above(0);",
-              "});"
-            ],
-            "type": "text/javascript",
-            "packages": {},
-            "requests": {}
-          }
-        }
-      ],
-      "protocolProfileBehavior": {
-        "disableBodyPruning": true
-      },
-      "request": {
-        "method": "GET",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "",
-          "options": {
-            "raw": {
-              "language": "json"
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/items",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "items"
+              ]
             }
-          }
+          },
+          "response": []
         },
-        "url": {
-          "raw": "http://127.0.0.1:8000/items/{{new_record_id}}",
-          "protocol": "http",
-          "host": [
-            "127",
-            "0",
-            "0",
-            "1"
-          ],
-          "port": "8000",
-          "path": [
-            "items",
-            "{{new_record_id}}"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Update Item",
-      "event": [
         {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test('Status code is successful', function () {\r",
-              "    pm.expect(pm.response.code).to.equal(200);\r",
-              "});\r",
-              "\r",
-              "pm.test('Response time is sane', function () {\r",
-              "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
-              "});\r",
-              "\r",
-              "pm.test('Content-Type is JSON when present', function () {\r",
-              "    const contentType = pm.response.headers.get('Content-Type');\r",
-              "    if (contentType) {\r",
-              "        pm.expect(contentType.toLowerCase()).to.include('application/json');\r",
-              "    }\r",
-              "});\r",
-              "\r",
-              "pm.test('Response body has expected item fields', function () {\r",
-              "    const json = pm.response.json();\r",
-              "    pm.expect(json).to.not.be.empty;\r",
-              "\r",
-              "    //const item = json[0];\r",
-              "    //pm.expect(item).to.have.property('name');\r",
-              "    //pm.expect(item.name).to.be.a('string').and.not.be.empty;\r",
-              "\r",
-              "    //pm.expect(item).to.have.property('description');\r",
-              "    //pm.expect(item.description).to.be.a('string');\r",
-              "\r",
-              "    //pm.expect(item).to.have.property('price');\r",
-              "    //pm.expect(item.price).to.be.a('number').and.be.at.least(0);\r",
-              "    \r",
-              "    //pm.expect(item).to.have.property('id');\r",
-              "    //pm.expect(item.id).to.be.a('number');\r",
-              "    //pm.expect(item.id).to.be.above(0);\r",
-              "});"
-            ],
-            "type": "text/javascript",
-            "packages": {},
-            "requests": {}
-          }
-        }
-      ],
-      "request": {
-        "method": "PUT",
-        "header": [
-          {
-            "key": "Accept",
-            "value": "application/json",
-            "type": "text"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n  \"name\": \"Turkish Marbles\",\r\n  \"description\": \"Assorted Turkish Marbles of different size and color\",\r\n  \"price\": 15\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
+          "name": "Create Item",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"new_record_name\", jsonData.name);",
+                  "pm.collectionVariables.set(\"new_record_description\", jsonData.description);",
+                  "pm.collectionVariables.set(\"new_record_price\", jsonData.price);",
+                  "pm.collectionVariables.set(\"new_record_id\", jsonData.id);",
+                  "",
+                  "pm.test('Status code is successful creation', function () {",
+                  "    pm.expect(pm.response.code).to.equal(201);",
+                  "});",
+                  "",
+                  "pm.test('Response time is sane', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "});",
+                  "",
+                  "pm.test('Content-Type is JSON when present', function () {",
+                  "    const contentType = pm.response.headers.get('Content-Type');",
+                  "    if (contentType) {",
+                  "        pm.expect(contentType.toLowerCase()).to.include('application/json');",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test('Response body has expected item fields', function () {",
+                  "    pm.expect(jsonData).to.have.property('name');",
+                  "    pm.expect(jsonData.name).to.be.a('string').and.not.be.empty;",
+                  "",
+                  "    pm.expect(jsonData).to.have.property('description');",
+                  "    pm.expect(jsonData.description).to.be.a('string');",
+                  "",
+                  "    pm.expect(jsonData).to.have.property('price');",
+                  "    pm.expect(Number(jsonData.price)).to.be.a('number').and.be.at.least(0);",
+                  "    ",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData.id).to.be.a('number');",
+                  "    pm.expect(jsonData.id).to.be.above(0);",
+                  "});",
+                  "",
+                  "console.log(\"Created record with ID: \" + pm.collectionVariables.get(\"new_record_id\"));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
             }
-          }
-        },
-        "url": {
-          "raw": "http://127.0.0.1:8000/items/{{new_record_id}}",
-          "protocol": "http",
-          "host": [
-            "127",
-            "0",
-            "0",
-            "1"
           ],
-          "port": "8000",
-          "path": [
-            "items",
-            "{{new_record_id}}"
-          ]
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"{{name}}\",\r\n  \"description\": \"{{description}}\",\r\n  \"price\": {{price}}\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/items",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "items"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Read Item",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is successful', function () {",
+                  "    pm.expect(pm.response.code).to.equal(200);",
+                  "});",
+                  "",
+                  "pm.test('Response time is sane', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "});",
+                  "",
+                  "pm.test('Content-Type is JSON when present', function () {",
+                  "    const contentType = pm.response.headers.get('Content-Type');",
+                  "    if (contentType) {",
+                  "        pm.expect(contentType.toLowerCase()).to.include('application/json');",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test('Response body has expected item fields', function () {",
+                  "    const json = pm.response.json();",
+                  "",
+                  "    pm.expect(json).to.have.property('name');",
+                  "    pm.expect(json.name).to.be.a('string').and.not.be.empty;",
+                  "",
+                  "    pm.expect(json).to.have.property('description');",
+                  "    pm.expect(json.description).to.be.a('string');",
+                  "",
+                  "    pm.expect(json).to.have.property('price');",
+                  "    pm.expect(Number(json.price)).to.be.a('number').and.be.at.least(0);",
+                  "    ",
+                  "    pm.expect(json).to.have.property('id');",
+                  "    pm.expect(json.id).to.be.a('number');",
+                  "    pm.expect(json.id).to.be.above(0);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/items/{{new_record_id}}",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "items",
+                "{{new_record_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Item",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is successful', function () {\r",
+                  "    pm.expect(pm.response.code).to.equal(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test('Response time is sane', function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test('Content-Type is JSON when present', function () {\r",
+                  "    const contentType = pm.response.headers.get('Content-Type');\r",
+                  "    if (contentType) {\r",
+                  "        pm.expect(contentType.toLowerCase()).to.include('application/json');\r",
+                  "    }\r",
+                  "});\r",
+                  "\r",
+                  "pm.test('Response body has expected item fields', function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.not.be.empty;\r",
+                  "\r",
+                  "    //const item = json[0];\r",
+                  "    //pm.expect(item).to.have.property('name');\r",
+                  "    //pm.expect(item.name).to.be.a('string').and.not.be.empty;\r",
+                  "\r",
+                  "    //pm.expect(item).to.have.property('description');\r",
+                  "    //pm.expect(item.description).to.be.a('string');\r",
+                  "\r",
+                  "    //pm.expect(item).to.have.property('price');\r",
+                  "    //pm.expect(item.price).to.be.a('number').and.be.at.least(0);\r",
+                  "    \r",
+                  "    //pm.expect(item).to.have.property('id');\r",
+                  "    //pm.expect(item.id).to.be.a('number');\r",
+                  "    //pm.expect(item.id).to.be.above(0);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Turkish Marbles\",\r\n  \"description\": \"Assorted Turkish Marbles of different size and color\",\r\n  \"price\": 15\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/items/{{new_record_id}}",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "items",
+                "{{new_record_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Item",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test('Status code is successful deletion', function () {\r",
+                  "    pm.expect(pm.response.code).to.equal(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test('Response time is sane', function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test('Content-Type is JSON when present', function () {\r",
+                  "    const contentType = pm.response.headers.get('Content-Type');\r",
+                  "    if (contentType) {\r",
+                  "        pm.expect(contentType.toLowerCase()).to.include('application/json');\r",
+                  "    }\r",
+                  "});\r",
+                  "\r",
+                  "// Parse the JSON response\r",
+                  "const responseData = pm.response.json();\r",
+                  "\r",
+                  "// Extract the id\r",
+                  "const createdId = responseData.id;\r",
+                  "\r",
+                  "// Save the ID to a collection collectionVariable\r",
+                  "pm.collectionVariables.set(\"to_be_deleted_id\", createdId);\r",
+                  "\r",
+                  "// Optional: Log it to the Postman Console\r",
+                  "console.log(\"Deleted ID: \", createdId);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/items/{{new_record_id}}",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "items",
+                "{{new_record_id}}"
+              ]
+            }
+          },
+          "response": []
         }
-      },
-      "response": []
+      ]
     },
     {
-      "name": "Delete Item",
-      "event": [
+      "name": "MultipleCRUD",
+      "item": [
         {
-          "listen": "prerequest",
-          "script": {
-            "exec": [
-              ""
-            ],
-            "type": "text/javascript",
-            "packages": {},
-            "requests": {}
-          }
+          "name": "MultiCRUD - Read Items",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is successful', function () {",
+                  "    pm.expect(pm.response.code).to.equal(200);",
+                  "});",
+                  "",
+                  "pm.test('Response time is sane', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "});",
+                  "",
+                  "pm.test('Content-Type is JSON when present', function () {",
+                  "    const contentType = pm.response.headers.get('Content-Type');",
+                  "    if (contentType) {",
+                  "        pm.expect(contentType.toLowerCase()).to.include('application/json');",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test('Response body has expected item fields', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.be.an('array').and.not.be.empty;",
+                  "",
+                  "    const item = json[0];",
+                  "    pm.expect(item).to.have.property('name');",
+                  "    pm.expect(item.name).to.be.a('string').and.not.be.empty;",
+                  "",
+                  "    pm.expect(item).to.have.property('description');",
+                  "    pm.expect(item.description).to.be.a('string');",
+                  "",
+                  "    pm.expect(item).to.have.property('price');",
+                  "    pm.expect(item.price).to.be.a('number').and.be.at.least(0);",
+                  "    ",
+                  "    pm.expect(item).to.have.property('id');",
+                  "    pm.expect(item.id).to.be.a('number');",
+                  "    pm.expect(item.id).to.be.above(0);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/items",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "items"
+              ]
+            }
+          },
+          "response": []
         },
         {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "console.log(\"Deleted record with ID: \" + pm.collectionVariables.get(\"new_record_id\"));"
-            ],
-            "type": "text/javascript",
-            "packages": {},
-            "requests": {}
-          }
-        }
-      ],
-      "request": {
-        "method": "DELETE",
-        "header": [
-          {
-            "key": "Accept",
-            "value": "application/json",
-            "type": "text"
-          }
-        ],
-        "url": {
-          "raw": "http://127.0.0.1:8000/items/{{new_record_id}}",
-          "protocol": "http",
-          "host": [
-            "127",
-            "0",
-            "0",
-            "1"
+          "name": "MultiCRUD - Create Item",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"new_record_name\", jsonData.name);",
+                  "pm.collectionVariables.set(\"new_record_description\", jsonData.description);",
+                  "pm.collectionVariables.set(\"new_record_price\", jsonData.price);",
+                  "pm.collectionVariables.set(\"new_record_id\", jsonData.id);",
+                  "",
+                  "pm.test('Status code is successful creation', function () {",
+                  "    pm.expect(pm.response.code).to.equal(201);",
+                  "});",
+                  "",
+                  "pm.test('Response time is sane', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "});",
+                  "",
+                  "pm.test('Content-Type is JSON when present', function () {",
+                  "    const contentType = pm.response.headers.get('Content-Type');",
+                  "    if (contentType) {",
+                  "        pm.expect(contentType.toLowerCase()).to.include('application/json');",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test('Response body has expected item fields', function () {",
+                  "    pm.expect(jsonData).to.have.property('name');",
+                  "    pm.expect(jsonData.name).to.be.a('string').and.not.be.empty;",
+                  "",
+                  "    pm.expect(jsonData).to.have.property('description');",
+                  "    pm.expect(jsonData.description).to.be.a('string');",
+                  "",
+                  "    pm.expect(jsonData).to.have.property('price');",
+                  "    pm.expect(Number(jsonData.price)).to.be.a('number').and.be.at.least(0);",
+                  "    ",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData.id).to.be.a('number');",
+                  "    pm.expect(jsonData.id).to.be.above(0);",
+                  "});",
+                  "",
+                  "// Parse the JSON response",
+                  "const responseData = pm.response.json();",
+                  "",
+                  "// Extract the id",
+                  "const createdId = responseData.id;",
+                  "",
+                  "// Save the ID to a collection collectionVariable",
+                  "pm.collectionVariables.set(\"to_be_deleted_id\", createdId);",
+                  "pm.collectionVariables.set(\"to_be_read_id\", createdId);",
+                  "pm.collectionVariables.set(\"to_be_updated_id\", createdId);",
+                  "",
+                  "// Optional: Log it to the Postman Console",
+                  "console.log(\"Captured ID: \", createdId);",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
           ],
-          "port": "8000",
-          "path": [
-            "items",
-            "{{new_record_id}}"
-          ]
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"{{name}}\",\r\n  \"description\": \"{{description}}\",\r\n  \"price\": {{price}}\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/items",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "items"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "MultiCRUD - Read Item",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is successful', function () {",
+                  "    pm.expect(pm.response.code).to.equal(200);",
+                  "});",
+                  "",
+                  "pm.test('Response time is sane', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "});",
+                  "",
+                  "pm.test('Content-Type is JSON when present', function () {",
+                  "    const contentType = pm.response.headers.get('Content-Type');",
+                  "    if (contentType) {",
+                  "        pm.expect(contentType.toLowerCase()).to.include('application/json');",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test('Response body has expected item fields', function () {",
+                  "    const json = pm.response.json();",
+                  "",
+                  "    pm.expect(json).to.have.property('name');",
+                  "    pm.expect(json.name).to.be.a('string').and.not.be.empty;",
+                  "",
+                  "    pm.expect(json).to.have.property('description');",
+                  "    pm.expect(json.description).to.be.a('string');",
+                  "",
+                  "    pm.expect(json).to.have.property('price');",
+                  "    pm.expect(Number(json.price)).to.be.a('number').and.be.at.least(0);",
+                  "    ",
+                  "    pm.expect(json).to.have.property('id');",
+                  "    pm.expect(json.id).to.be.a('number');",
+                  "    pm.expect(json.id).to.be.above(0);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/items/{{to_be_read_id}}",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "items",
+                "{{to_be_read_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "MultiCRUD - Update Item",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is successful', function () {\r",
+                  "    pm.expect(pm.response.code).to.equal(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test('Response time is sane', function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test('Content-Type is JSON when present', function () {\r",
+                  "    const contentType = pm.response.headers.get('Content-Type');\r",
+                  "    if (contentType) {\r",
+                  "        pm.expect(contentType.toLowerCase()).to.include('application/json');\r",
+                  "    }\r",
+                  "});\r",
+                  "\r",
+                  "pm.test('Response body has expected item fields', function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.not.be.empty;\r",
+                  "\r",
+                  "    //const item = json[0];\r",
+                  "    //pm.expect(item).to.have.property('name');\r",
+                  "    //pm.expect(item.name).to.be.a('string').and.not.be.empty;\r",
+                  "\r",
+                  "    //pm.expect(item).to.have.property('description');\r",
+                  "    //pm.expect(item.description).to.be.a('string');\r",
+                  "\r",
+                  "    //pm.expect(item).to.have.property('price');\r",
+                  "    //pm.expect(item.price).to.be.a('number').and.be.at.least(0);\r",
+                  "    \r",
+                  "    //pm.expect(item).to.have.property('id');\r",
+                  "    //pm.expect(item.id).to.be.a('number');\r",
+                  "    //pm.expect(item.id).to.be.above(0);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Turkish Marbles\",\r\n  \"description\": \"Assorted Turkish Marbles of different size and color\",\r\n  \"price\": 15\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/items/{{to_be_updated_id}}",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "items",
+                "{{to_be_updated_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "MultiCRUD - Read Updated Item",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is successful', function () {",
+                  "    pm.expect(pm.response.code).to.equal(200);",
+                  "});",
+                  "",
+                  "pm.test('Response time is sane', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "});",
+                  "",
+                  "pm.test('Content-Type is JSON when present', function () {",
+                  "    const contentType = pm.response.headers.get('Content-Type');",
+                  "    if (contentType) {",
+                  "        pm.expect(contentType.toLowerCase()).to.include('application/json');",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test('Response body has expected item fields', function () {",
+                  "    const json = pm.response.json();",
+                  "",
+                  "    pm.expect(json).to.have.property('name');",
+                  "    pm.expect(json.name).to.be.a('string').and.not.be.empty;",
+                  "",
+                  "    pm.expect(json).to.have.property('description');",
+                  "    pm.expect(json.description).to.be.a('string');",
+                  "",
+                  "    pm.expect(json).to.have.property('price');",
+                  "    pm.expect(Number(json.price)).to.be.a('number').and.be.at.least(0);",
+                  "    ",
+                  "    pm.expect(json).to.have.property('id');",
+                  "    pm.expect(json.id).to.be.a('number');",
+                  "    pm.expect(json.id).to.be.above(0);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/items/{{to_be_read_id}}",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "items",
+                "{{to_be_read_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "MultiCRUD - Delete Item",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test('Status code is successful deletion', function () {\r",
+                  "    pm.expect(pm.response.code).to.equal(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test('Response time is sane', function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test('Content-Type is JSON when present', function () {\r",
+                  "    const contentType = pm.response.headers.get('Content-Type');\r",
+                  "    if (contentType) {\r",
+                  "        pm.expect(contentType.toLowerCase()).to.include('application/json');\r",
+                  "    }\r",
+                  "});\r",
+                  "\r",
+                  "// Parse the JSON response\r",
+                  "const responseData = pm.response.json();\r",
+                  "\r",
+                  "// Extract the id\r",
+                  "const createdId = responseData.id;\r",
+                  "\r",
+                  "// Save the ID to a collection collectionVariable\r",
+                  "pm.collectionVariables.set(\"to_be_deleted_id\", createdId);\r",
+                  "\r",
+                  "// Optional: Log it to the Postman Console\r",
+                  "console.log(\"Deleted ID: \", createdId);\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/items/{{to_be_deleted_id}}",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "items",
+                "{{to_be_deleted_id}}"
+              ]
+            }
+          },
+          "response": []
         }
-      },
-      "response": []
+      ]
     }
   ],
   "variable": [
@@ -395,6 +932,18 @@
     },
     {
       "key": "new_record_id",
+      "value": ""
+    },
+    {
+      "key": "to_be_deleted_id",
+      "value": ""
+    },
+    {
+      "key": "to_be_read_id",
+      "value": ""
+    },
+    {
+      "key": "to_be_updated_id",
       "value": ""
     }
   ]
