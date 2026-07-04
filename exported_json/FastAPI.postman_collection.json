@@ -415,7 +415,84 @@
       "name": "MultipleCRUD",
       "item": [
         {
-          "name": "MultiCRUD - Read Items",
+          "name": "MultiCRUD - Create 5 Items",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "",
+                  "// store id",
+                  "let ids = JSON.parse(pm.collectionVariables.get(\"ids\") || \"[]\");",
+                  "ids.push(json.id);",
+                  "pm.collectionVariables.set(\"ids\", JSON.stringify(ids));",
+                  "",
+                  "// increment counter",
+                  "let count = Number(pm.collectionVariables.get(\"createCount\") || 0);",
+                  "count++;",
+                  "pm.collectionVariables.set(\"createCount\", count);",
+                  "",
+                  "console.log(\"Created:\", json.id, \"Count:\", count);",
+                  "",
+                  "// loop control",
+                  "if (count < 5) {",
+                  "    pm.execution.setNextRequest(\"MultiCRUD - Create 5 Items\");",
+                  "} else {",
+                  "    //console.log(\"Switching to DELETE phase\");",
+                  "    //pm.execution.setNextRequest(\"MultiCRUD - Delete 5 Items\");",
+                  "    console.log(\"Switching to Read Items Post Creation phase\");",
+                  "    pm.execution.setNextRequest(\"MultiCRUD - Read Items Post Creation\");",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set(\"randomInt\", Math.floor(Math.random() * 100000));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Van Halen Poster {{randomInt}}\",\r\n  \"description\": \"Van Halen poster from 1991\",\r\n  \"price\": 10\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/items",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "items"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "MultiCRUD - Read Items Post Creation",
           "event": [
             {
               "listen": "test",
@@ -482,356 +559,19 @@
           "response": []
         },
         {
-          "name": "MultiCRUD - Create Item",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "const jsonData = pm.response.json();",
-                  "pm.collectionVariables.set(\"new_record_name\", jsonData.name);",
-                  "pm.collectionVariables.set(\"new_record_description\", jsonData.description);",
-                  "pm.collectionVariables.set(\"new_record_price\", jsonData.price);",
-                  "pm.collectionVariables.set(\"new_record_id\", jsonData.id);",
-                  "",
-                  "pm.test('Status code is successful creation', function () {",
-                  "    pm.expect(pm.response.code).to.equal(201);",
-                  "});",
-                  "",
-                  "pm.test('Response time is sane', function () {",
-                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
-                  "});",
-                  "",
-                  "pm.test('Content-Type is JSON when present', function () {",
-                  "    const contentType = pm.response.headers.get('Content-Type');",
-                  "    if (contentType) {",
-                  "        pm.expect(contentType.toLowerCase()).to.include('application/json');",
-                  "    }",
-                  "});",
-                  "",
-                  "pm.test('Response body has expected item fields', function () {",
-                  "    pm.expect(jsonData).to.have.property('name');",
-                  "    pm.expect(jsonData.name).to.be.a('string').and.not.be.empty;",
-                  "",
-                  "    pm.expect(jsonData).to.have.property('description');",
-                  "    pm.expect(jsonData.description).to.be.a('string');",
-                  "",
-                  "    pm.expect(jsonData).to.have.property('price');",
-                  "    pm.expect(Number(jsonData.price)).to.be.a('number').and.be.at.least(0);",
-                  "    ",
-                  "    pm.expect(jsonData).to.have.property('id');",
-                  "    pm.expect(jsonData.id).to.be.a('number');",
-                  "    pm.expect(jsonData.id).to.be.above(0);",
-                  "});",
-                  "",
-                  "// Parse the JSON response",
-                  "const responseData = pm.response.json();",
-                  "",
-                  "// Extract the id",
-                  "const createdId = responseData.id;",
-                  "",
-                  "// Save the ID to a collection collectionVariable",
-                  "pm.collectionVariables.set(\"to_be_deleted_id\", createdId);",
-                  "pm.collectionVariables.set(\"to_be_read_id\", createdId);",
-                  "pm.collectionVariables.set(\"to_be_updated_id\", createdId);",
-                  "",
-                  "// Optional: Log it to the Postman Console",
-                  "console.log(\"Captured ID: \", createdId);",
-                  ""
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            },
-            {
-              "listen": "prerequest",
-              "script": {
-                "exec": [
-                  ""
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n  \"name\": \"{{name}}\",\r\n  \"description\": \"{{description}}\",\r\n  \"price\": {{price}}\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "http://127.0.0.1:8000/items",
-              "protocol": "http",
-              "host": [
-                "127",
-                "0",
-                "0",
-                "1"
-              ],
-              "port": "8000",
-              "path": [
-                "items"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "MultiCRUD - Read Item",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status code is successful', function () {",
-                  "    pm.expect(pm.response.code).to.equal(200);",
-                  "});",
-                  "",
-                  "pm.test('Response time is sane', function () {",
-                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
-                  "});",
-                  "",
-                  "pm.test('Content-Type is JSON when present', function () {",
-                  "    const contentType = pm.response.headers.get('Content-Type');",
-                  "    if (contentType) {",
-                  "        pm.expect(contentType.toLowerCase()).to.include('application/json');",
-                  "    }",
-                  "});",
-                  "",
-                  "pm.test('Response body has expected item fields', function () {",
-                  "    const json = pm.response.json();",
-                  "",
-                  "    pm.expect(json).to.have.property('name');",
-                  "    pm.expect(json.name).to.be.a('string').and.not.be.empty;",
-                  "",
-                  "    pm.expect(json).to.have.property('description');",
-                  "    pm.expect(json.description).to.be.a('string');",
-                  "",
-                  "    pm.expect(json).to.have.property('price');",
-                  "    pm.expect(Number(json.price)).to.be.a('number').and.be.at.least(0);",
-                  "    ",
-                  "    pm.expect(json).to.have.property('id');",
-                  "    pm.expect(json.id).to.be.a('number');",
-                  "    pm.expect(json.id).to.be.above(0);",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "method": "GET",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "http://127.0.0.1:8000/items/{{to_be_read_id}}",
-              "protocol": "http",
-              "host": [
-                "127",
-                "0",
-                "0",
-                "1"
-              ],
-              "port": "8000",
-              "path": [
-                "items",
-                "{{to_be_read_id}}"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "MultiCRUD - Update Item",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status code is successful', function () {\r",
-                  "    pm.expect(pm.response.code).to.equal(200);\r",
-                  "});\r",
-                  "\r",
-                  "pm.test('Response time is sane', function () {\r",
-                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
-                  "});\r",
-                  "\r",
-                  "pm.test('Content-Type is JSON when present', function () {\r",
-                  "    const contentType = pm.response.headers.get('Content-Type');\r",
-                  "    if (contentType) {\r",
-                  "        pm.expect(contentType.toLowerCase()).to.include('application/json');\r",
-                  "    }\r",
-                  "});\r",
-                  "\r",
-                  "pm.test('Response body has expected item fields', function () {\r",
-                  "    const json = pm.response.json();\r",
-                  "    pm.expect(json).to.not.be.empty;\r",
-                  "\r",
-                  "    //const item = json[0];\r",
-                  "    //pm.expect(item).to.have.property('name');\r",
-                  "    //pm.expect(item.name).to.be.a('string').and.not.be.empty;\r",
-                  "\r",
-                  "    //pm.expect(item).to.have.property('description');\r",
-                  "    //pm.expect(item.description).to.be.a('string');\r",
-                  "\r",
-                  "    //pm.expect(item).to.have.property('price');\r",
-                  "    //pm.expect(item.price).to.be.a('number').and.be.at.least(0);\r",
-                  "    \r",
-                  "    //pm.expect(item).to.have.property('id');\r",
-                  "    //pm.expect(item.id).to.be.a('number');\r",
-                  "    //pm.expect(item.id).to.be.above(0);\r",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n  \"name\": \"Turkish Marbles\",\r\n  \"description\": \"Assorted Turkish Marbles of different size and color\",\r\n  \"price\": 15\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "http://127.0.0.1:8000/items/{{to_be_updated_id}}",
-              "protocol": "http",
-              "host": [
-                "127",
-                "0",
-                "0",
-                "1"
-              ],
-              "port": "8000",
-              "path": [
-                "items",
-                "{{to_be_updated_id}}"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "MultiCRUD - Read Updated Item",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status code is successful', function () {",
-                  "    pm.expect(pm.response.code).to.equal(200);",
-                  "});",
-                  "",
-                  "pm.test('Response time is sane', function () {",
-                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
-                  "});",
-                  "",
-                  "pm.test('Content-Type is JSON when present', function () {",
-                  "    const contentType = pm.response.headers.get('Content-Type');",
-                  "    if (contentType) {",
-                  "        pm.expect(contentType.toLowerCase()).to.include('application/json');",
-                  "    }",
-                  "});",
-                  "",
-                  "pm.test('Response body has expected item fields', function () {",
-                  "    const json = pm.response.json();",
-                  "",
-                  "    pm.expect(json).to.have.property('name');",
-                  "    pm.expect(json.name).to.be.a('string').and.not.be.empty;",
-                  "",
-                  "    pm.expect(json).to.have.property('description');",
-                  "    pm.expect(json.description).to.be.a('string');",
-                  "",
-                  "    pm.expect(json).to.have.property('price');",
-                  "    pm.expect(Number(json.price)).to.be.a('number').and.be.at.least(0);",
-                  "    ",
-                  "    pm.expect(json).to.have.property('id');",
-                  "    pm.expect(json.id).to.be.a('number');",
-                  "    pm.expect(json.id).to.be.above(0);",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "method": "GET",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "http://127.0.0.1:8000/items/{{to_be_read_id}}",
-              "protocol": "http",
-              "host": [
-                "127",
-                "0",
-                "0",
-                "1"
-              ],
-              "port": "8000",
-              "path": [
-                "items",
-                "{{to_be_read_id}}"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "MultiCRUD - Delete Item",
+          "name": "MultiCRUD - Delete 5 Items",
           "event": [
             {
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  ""
+                  "let ids = JSON.parse(pm.collectionVariables.get(\"ids\"));\r",
+                  "\r",
+                  "let index = Number(pm.collectionVariables.get(\"deleteIndex\") || 0);\r",
+                  "\r",
+                  "pm.collectionVariables.set(\"currentId\", ids[index]);\r",
+                  "\r",
+                  "console.log(\"Deleting:\", ids[index]);"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -842,35 +582,26 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "const jsonData = pm.response.json();\r",
+                  "let ids = JSON.parse(pm.collectionVariables.get(\"ids\"));\r",
                   "\r",
-                  "pm.test('Status code is successful deletion', function () {\r",
-                  "    pm.expect(pm.response.code).to.equal(200);\r",
-                  "});\r",
+                  "let index = Number(pm.collectionVariables.get(\"deleteIndex\") || 0);\r",
                   "\r",
-                  "pm.test('Response time is sane', function () {\r",
-                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
-                  "});\r",
+                  "index++;\r",
                   "\r",
-                  "pm.test('Content-Type is JSON when present', function () {\r",
-                  "    const contentType = pm.response.headers.get('Content-Type');\r",
-                  "    if (contentType) {\r",
-                  "        pm.expect(contentType.toLowerCase()).to.include('application/json');\r",
-                  "    }\r",
-                  "});\r",
+                  "pm.collectionVariables.set(\"deleteIndex\", index);\r",
                   "\r",
-                  "// Parse the JSON response\r",
-                  "const responseData = pm.response.json();\r",
+                  "if (index < ids.length) {\r",
+                  "    pm.execution.setNextRequest(\"MultiCRUD - Delete 5 Items\");\r",
+                  "} else {\r",
+                  "    console.log(\"ALL ITEMS DELETED\");\r",
                   "\r",
-                  "// Extract the id\r",
-                  "const createdId = responseData.id;\r",
+                  "    // cleanup\r",
+                  "    pm.collectionVariables.set(\"ids\", \"[]\");\r",
+                  "    pm.collectionVariables.set(\"createCount\", \"0\");\r",
+                  "    pm.collectionVariables.set(\"deleteIndex\", \"0\");\r",
                   "\r",
-                  "// Save the ID to a collection collectionVariable\r",
-                  "pm.collectionVariables.set(\"to_be_deleted_id\", createdId);\r",
-                  "\r",
-                  "// Optional: Log it to the Postman Console\r",
-                  "console.log(\"Deleted ID: \", createdId);\r",
-                  ""
+                  "    pm.execution.setNextRequest(null);\r",
+                  "}"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -897,7 +628,7 @@
               }
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/items/{{to_be_deleted_id}}",
+              "raw": "http://127.0.0.1:8000/items/{{currentId}}",
               "protocol": "http",
               "host": [
                 "127",
@@ -908,13 +639,37 @@
               "port": "8000",
               "path": [
                 "items",
-                "{{to_be_deleted_id}}"
+                "{{currentId}}"
               ]
             }
           },
           "response": []
         }
       ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
     }
   ],
   "variable": [
@@ -931,19 +686,23 @@
       "value": ""
     },
     {
-      "key": "new_record_id",
+      "key": "ids",
       "value": ""
     },
     {
-      "key": "to_be_deleted_id",
+      "key": "createCount",
       "value": ""
     },
     {
-      "key": "to_be_read_id",
+      "key": "deleteIndex",
       "value": ""
     },
     {
-      "key": "to_be_updated_id",
+      "key": "totalCreates",
+      "value": ""
+    },
+    {
+      "key": "currentId",
       "value": ""
     }
   ]

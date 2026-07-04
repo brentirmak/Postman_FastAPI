@@ -1,4 +1,4 @@
-(7/2) Background
+(7/3) Background
 
 1. Utilizes fastapi where the following need to be installed:
    fastapi uvicorn sqlalchemy pymysql python-dotenv
@@ -13,4 +13,4 @@
 
 5. Tests are basic GET, POST, PUT and DELETE requests that validate error codes/response times/response content
 
-6. There are 2 folders - one for a single CRUD test and one with mulitple CRUD tests
+6. There are 2 folders. One is for a single CRUD test. The other one is for a POST request that is executed 5 times (i.e. CREATE) before all of the elements are deleted via a DELETE request. The multiple create/delete logic is within post-response script(s).
