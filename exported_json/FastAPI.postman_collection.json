@@ -85,15 +85,11 @@
               }
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/items",
+              "raw": "http://{{base_url}}/items",
               "protocol": "http",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "items"
               ]
@@ -162,15 +158,11 @@
               }
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/items/{{new_record_id}}",
+              "raw": "http://{{base_url}}/items/{{new_record_id}}",
               "protocol": "http",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "items",
                 "{{new_record_id}}"
@@ -231,15 +223,11 @@
               }
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/items/{{new_record_id}}",
+              "raw": "http://{{base_url}}/items/{{new_record_id}}",
               "protocol": "http",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "items",
                 "{{new_record_id}}"
@@ -311,15 +299,11 @@
               }
             ],
             "url": {
-              "raw": "http://127.0.0.1:8000/items/{{new_record_id}}",
+              "raw": "http://{{base_url}}/items/{{new_record_id}}",
               "protocol": "http",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "items",
                 "{{new_record_id}}"
@@ -368,15 +352,11 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://127.0.0.1:8000/items",
+              "raw": "http://{{base_url}}/items",
               "protocol": "http",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "items"
               ]
@@ -473,15 +453,11 @@
               }
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/items",
+              "raw": "http://{{base_url}}/items",
               "protocol": "http",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "items"
               ]
@@ -568,15 +544,11 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://127.0.0.1:8000/items",
+              "raw": "http://{{base_url}}/items",
               "protocol": "http",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "items"
               ]
@@ -682,15 +654,11 @@
               }
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/items/{{currentId}}",
+              "raw": "http://{{base_url}}/items/{{currentId}}",
               "protocol": "http",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "items",
                 "{{currentId}}"
@@ -778,15 +746,11 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://127.0.0.1:8000/items",
+              "raw": "http://{{base_url}}/items",
               "protocol": "http",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "items"
               ]
@@ -884,15 +848,11 @@
               }
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/items/{{currentId}}",
+              "raw": "http://{{base_url}}/items/{{currentId}}",
               "protocol": "http",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "items",
                 "{{currentId}}"
