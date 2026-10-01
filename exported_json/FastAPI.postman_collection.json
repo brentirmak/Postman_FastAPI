@@ -204,20 +204,6 @@
                   "pm.test('Response body has expected item fields', function () {\r",
                   "    const json = pm.response.json();\r",
                   "    pm.expect(json).to.not.be.empty;\r",
-                  "\r",
-                  "    //const item = json[0];\r",
-                  "    //pm.expect(item).to.have.property('name');\r",
-                  "    //pm.expect(item.name).to.be.a('string').and.not.be.empty;\r",
-                  "\r",
-                  "    //pm.expect(item).to.have.property('description');\r",
-                  "    //pm.expect(item.description).to.be.a('string');\r",
-                  "\r",
-                  "    //pm.expect(item).to.have.property('price');\r",
-                  "    //pm.expect(item.price).to.be.a('number').and.be.at.least(0);\r",
-                  "    \r",
-                  "    //pm.expect(item).to.have.property('id');\r",
-                  "    //pm.expect(item.id).to.be.a('number');\r",
-                  "    //pm.expect(item.id).to.be.above(0);\r",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -348,6 +334,57 @@
       "name": "MultipleCRUD",
       "item": [
         {
+          "name": "MultiCRUD - Initialize",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set(\"ids\", \"[]\");\r",
+                  "pm.collectionVariables.set(\"createCount\", \"0\");\r",
+                  "pm.collectionVariables.set(\"updateIndex\", \"0\");\r",
+                  "pm.collectionVariables.set(\"deleteIndex\", \"0\");\r",
+                  " \r",
+                  "console.log(\"Variables initialized\");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.execution.setNextRequest(\"MultiCRUD - Create 5 Items\");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/items",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "items"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "MultiCRUD - Create 5 Items",
           "event": [
             {
@@ -410,9 +447,11 @@
                 "exec": [
                   "console.log(\"--------------------------------------------------\");\r",
                   "console.log(\"Inside pre-request of Create 5 items\");\r",
+                  "\r",
                   "console.log(\"Generating random int\");\r",
                   "pm.variables.set(\"randomInt\", Math.floor(Math.random() * 100000));\r",
                   "console.log(\"Generated random int\");\r",
+                  "\r",
                   "console.log(\"--------------------------------------------------\");"
                 ],
                 "type": "text/javascript",
@@ -501,6 +540,221 @@
                   "    pm.expect(item.id).to.be.a('number');",
                   "    pm.expect(item.id).to.be.above(0);",
                   "});",
+                  "",
+                  "pm.collectionVariables.set(\"updateIndex\", \"0\");",
+                  "console.log(\"Switching to Update phase\");",
+                  "pm.execution.setNextRequest(\"MultiCRUD - Update Items Post Creation\");",
+                  "",
+                  "console.log(\"***********************************************\");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/items",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "items"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "MultiCRUD - Update Items Post Creation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is successful', function () {\r",
+                  "pm.expect(pm.response.code).to.equal(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test('Response time is sane', function () {\r",
+                  "pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test('Content-Type is JSON when present', function () {\r",
+                  "const contentType = pm.response.headers.get('Content-Type');\r",
+                  "\r",
+                  "if (contentType) {\r",
+                  "pm.expect(contentType.toLowerCase())\r",
+                  ".to.include('application/json');\r",
+                  "}\r",
+                  "});\r",
+                  "\r",
+                  "let ids = JSON.parse(pm.collectionVariables.get(\"ids\"));\r",
+                  "let index = Number(pm.collectionVariables.get(\"updateIndex\") || 0);\r",
+                  "\r",
+                  "index++;\r",
+                  "\r",
+                  "pm.collectionVariables.set(\"updateIndex\", index);\r",
+                  "\r",
+                  "console.log(\"Inside post-response script of Update 5 Items\");\r",
+                  "\r",
+                  "if (index < ids.length) {\r",
+                  "\r",
+                  "console.log(\"More items remain to be updated\");\r",
+                  "\r",
+                  "pm.execution.setNextRequest(\r",
+                  "\"MultiCRUD - Update Items Post Creation\"\r",
+                  ");\r",
+                  "\r",
+                  "} else {\r",
+                  "\r",
+                  "console.log(\"ALL ITEMS UPDATED\");\r",
+                  "\r",
+                  "pm.collectionVariables.set(\"updateIndex\", \"0\");\r",
+                  "\r",
+                  "pm.execution.setNextRequest(\r",
+                  "\"MultiCRUD - Read Items Post Update\"\r",
+                  ");\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "let ids = JSON.parse(pm.collectionVariables.get(\"ids\"));\r",
+                  "let index = Number(pm.collectionVariables.get(\"updateIndex\") || 0);\r",
+                  "\r",
+                  "console.log(\"ids =\", ids);\r",
+                  "console.log(\"index =\", index);\r",
+                  "console.log(\"current id =\", ids[index]);\r",
+                  "\r",
+                  "pm.collectionVariables.set(\"currentId\", ids[index]);\r",
+                  "\r",
+                  "console.log(\"Inside pre-request script of Update 5 Items\");\r",
+                  "console.log(\"Updating:\", ids[index]);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Turkish Marbles {{currentId}}\",\r\n  \"description\": \"Assorted Turkish Marbles of different size and color\",\r\n  \"price\": 15\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/items/{{currentId}}",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "items",
+                "{{currentId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "MultiCRUD - Read Items Post Update",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "console.log(\"***********************************************\");",
+                  "console.log(\"Inside post-response request of Read Updated Items\");",
+                  "",
+                  "const items = pm.response.json();",
+                  "items.forEach(item => {",
+                  "    console.log(\"ID:\", item.id);",
+                  "    console.log(\"Name:\", item.name);",
+                  "    console.log(\"Description:\", item.description);",
+                  "    console.log(\"Price:\", item.price);",
+                  "});",
+                  "",
+                  "pm.test('Status code is successful', function () {",
+                  "    pm.expect(pm.response.code).to.equal(200);",
+                  "});",
+                  "",
+                  "pm.test('Response time is sane', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "});",
+                  "",
+                  "pm.test('Content-Type is JSON when present', function () {",
+                  "    const contentType = pm.response.headers.get('Content-Type');",
+                  "    if (contentType) {",
+                  "        pm.expect(contentType.toLowerCase()).to.include('application/json');",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test('Response body has expected item fields', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.be.an('array').and.not.be.empty;",
+                  "",
+                  "    const item = json[0];",
+                  "    pm.expect(item).to.have.property('name');",
+                  "    pm.expect(item.name).to.be.a('string').and.not.be.empty;",
+                  "",
+                  "    pm.expect(item).to.have.property('description');",
+                  "    pm.expect(item.description).to.be.a('string');",
+                  "",
+                  "    pm.expect(item).to.have.property('price');",
+                  "    pm.expect(item.price).to.be.a('number').and.be.at.least(0);",
+                  "    ",
+                  "    pm.expect(item).to.have.property('id');",
+                  "    pm.expect(item.id).to.be.a('number');",
+                  "    pm.expect(item.id).to.be.above(0);",
+                  "});",
+                  "",
+                  "pm.collectionVariables.set(\"updateIndex\", \"0\");",
+                  "console.log(\"Switching to Update phase\");",
+                  "pm.execution.setNextRequest(\"MultiCRUD - Delete 5 Items\");",
+                  "",
                   "console.log(\"***********************************************\");"
                 ],
                 "type": "text/javascript",
@@ -713,6 +967,10 @@
     },
     {
       "key": "to_be_deleted_id",
+      "value": ""
+    },
+    {
+      "key": "updateIndex",
       "value": ""
     }
   ]
